@@ -359,13 +359,13 @@ class Potential:
         r : array-like
             The coordinate-space mesh for the potential.
         l : int (optional)
-            The orbital angular momentum of one nucleon.
+            The orbital angular momentum quantum number, \ell.
         ll : int (optional)
-            The orbital angular momentum of other nucleon.
+            The final orbital angular momentum quantum number, \ell'.
         j : int (optional)
-            The "J" value of the angular momentum for the scattering problem.
+            The total orbital angular momentum quantum number, j.
         S : int (optional)
-            Spin-coupling of the nucleons.
+            The spin quantum number of the system, S.
         potId : int (optional)
             Specification of the chiral potential leading order as well as the real- and momentum-
             space cutoffs.
