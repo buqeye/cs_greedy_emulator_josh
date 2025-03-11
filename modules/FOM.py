@@ -221,7 +221,7 @@ class MatrixNumerovSolver:
         if self.use_ab:
             for q in np.arange(self.number_of_parameters):
                 A_bar[1:, :self.n_slice, q] = self.one_ten_one * self.const_g[:, q]
-            # apply equation 26b
+            # apply equation 26c
             A_bar[1, :self.n_slice, 0] += 1
             A_bar[2, :self.n_slice, 0] += -2
             A_bar[3, :self.n_slice, 0] += 1
@@ -239,7 +239,7 @@ class MatrixNumerovSolver:
         else:
             for q in np.arange(self.number_of_parameters):
                 A_bar[:, :self.n_slice, q] = self.one_ten_one * self.const_g[:, q]
-            # apply equation 26b
+            # apply equation 26c
             A_bar[0, :self.n_slice, 0] += 1
             A_bar[1, :self.n_slice, 0] += -2
             A_bar[2, :self.n_slice, 0] += 1
