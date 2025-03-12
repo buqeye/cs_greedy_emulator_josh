@@ -28,8 +28,6 @@ The reported "~__x" values are the approximate speedups _this_ implementation of
 ## Example Usage
 ```python
 import numpy as np
-import sys
-sys.path.append("./modules")
 from modules import Potential, FOM, ROM
 
 # define the coordinate-space mesh

@@ -4,7 +4,7 @@
 
 # import numpy as np
 from scipy.special import spherical_jn, spherical_yn
-from Constants import *
+from modules.Constants import *
 
 
 ###   ###   ###   spherical bessels   ###   ###   ###

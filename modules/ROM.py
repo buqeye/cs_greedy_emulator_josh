@@ -9,10 +9,9 @@ import scipy
 import time
 from tqdm import tqdm
 from functools import cached_property
-
-from gram_schmidt import MGS, unoptimized_MGS
-from Matching import matching_using_least_squares, propagate_delta_error
-from Constants import *
+from modules.gram_schmidt import MGS, unoptimized_MGS
+from modules.Matching import matching_using_least_squares, propagate_delta_error
+from modules.Constants import *
 
 
 def apply_range_factor(lecs: dict, 

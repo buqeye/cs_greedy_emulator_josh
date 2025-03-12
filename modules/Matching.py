@@ -5,7 +5,7 @@
 import numpy as np
 from scipy.sparse import diags
 from numba import njit
-from SpecialFunctions import F, G, F_prime, G_prime, H
+from modules.SpecialFunctions import F, G, F_prime, G_prime, H
 
 
 @njit(fastmath=True)

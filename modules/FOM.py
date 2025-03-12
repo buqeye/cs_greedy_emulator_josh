@@ -8,11 +8,8 @@ import numpy as np
 from scipy.sparse import spdiags, diags
 from scipy.linalg import solve_banded
 from functools import cached_property
-
-import sys
-sys.path.append("./../modules")
-from Constants import *
-from SpecialFunctions import analytic_phi, F, G
+from modules.Constants import *
+from modules.SpecialFunctions import analytic_phi, F, G
 
 
 class MatrixNumerovSolver:

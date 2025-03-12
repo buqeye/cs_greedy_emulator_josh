@@ -6,9 +6,6 @@
 import yaml
 import numpy as np
 from functools import cached_property
-import sys
-sys.path.append("./../../modules")
-sys.path.append("./../chiral_construction")  # for accessing chiral potential
 
 
 path_to_potential_data = "./potential_data/"
@@ -66,271 +63,6 @@ def chiral_affine_outside_of_class(x,
     ret = np.zeros(12, dtype=np.double)  # get the array that chiralPot will populate
     chiralPot.Vrlocal_affine(x, potId, channel, ret)  # populate ret & coeffs for the potential
     return ret
-
-def chiral_lagrangian_to_auxiliary():
-    """Transformation matrix to go from "lagrangian" LECs to "auxiliary" LECs
-    basis: {C0, CT, CS, C1, C2, ..., C7, CNN, CPP}
-    """
-    #               C0 CT CS C1  C2 C3  C4  C5  C6  C7  CNN  CPP
-    mat = np.array([[1, 0, 0, 0,  0, 0,  0,  0,  0,   0,  0,  0],
-                    [0, 1, 0, 0,  1, 0,  0,  0,  0,   0,  0,  0],
-                    [0, 1, 0, 0, -3, 0,  0,  0,  0,   0,  0,  0],
-                    [0, 1, 1, 0, -3, 0,  0,  0,  0,   0,  0,  0],
-                    [0, 1, 0, 1, -3, 0,  0,  0,  0,   0,  0,  0],
-                    [0, 0, 0, 0,  0, 1, -3,  1, -3,   0,  0,  0],
-                    [0, 0, 0, 0,  0, 0,  0,  0,  0,   0,  1, -3],
-                    [0, 0, 0, 0,  0, 1,  1, -3, -3,   0,  0,  0],
-                    [0, 0, 0, 0,  0, 1,  1,  1,  1,   0,  0,  0],
-                    [0, 0, 0, 0,  0, 1, -3, -3,  9,   0,  0,  0],
-                    [0, 0, 0, 0,  0, 0,  0,  0,  0, 0.5,  0,  0],
-                    [0, 0, 0, 0,  0, 0,  0,  0,  0,   0,  1,  1]])
-    return mat
-
-def chiral_auxiliary_to_spectroscopic():
-    """Transformation matrix to go from "auxiliary" LECs to "spectroscopic" LECs
-    basis: {d0, d11, d22, dNN, dPP, d1, d2, ..., d7}
-    """
-    #                    d0 d11 d22 dNN dPP  d1     d2  d3  d4 d5     d6      d7
-    lin_comb = np.array([[1,  0,  0,  0,  0,  0,      0, 0,  0, 0,      0,      0],
-                         [0,  1,  0,  0,  0,  0,      0, 0,  0, 0,      0,      0],
-                         [0,  0,  1,  0,  0,  0,      0, 0,  0, 0,      0,      0],
-                         [0,  0,  0,  1,  0,  0,      0, 0,  0, 0,      0,      0],
-                         [0,  0,  0,  0,  1,  0,      0, 0,  0, 0,      0,      0],
-                         [0,  0,  0,  0,  0,  0,      0, 1,  0, 0,      0,     -1],
-                         [0,  0,  0,  0,  0,  1,  1 / 3, 0,  0, 0,      0,      0],
-                         [0,  0,  0,  0,  0,  0,      1, 0,  0, 0,      0,      0],
-                         [0,  0,  0,  0,  0, -1,  1 / 3, 0,  0, 0,      0,      0],
-                         [0,  0,  0,  0,  0,  1, 1 / 15, 0,  0, 0,  3 / 5,      0],
-                         [0,  0,  0,  0,  0,  0,     -1, 0,  0, 1,      0,      0],
-                         [0,  0,  0,  0,  0,  0,      0, 0, -1, 0,      0,      1],
-                         [0,  0,  0,  0,  0,  0,      0, 0,  1, 0,  2 / 5, -1 / 5],
-                         [0,  0,  0,  0,  0,  0,      0, 0, -1, 0,      0,     -1],
-                         [0,  0,  0,  0,  0,  0,      0, 0,  1, 0,  1 / 5,  3 / 5],
-                         [0,  0,  0,  0,  0,  0,      0, 0, -1, 0,      0, -1 / 5],
-                         [0,  0,  0,  0,  0,  0,      0, 0,  1, 0, -1 / 5, 7 / 25],
-                         [0,  0,  0,  0,  0,  0,      0, 0,  0, 0,      0,      1],
-                         [0,  0,  0,  0,  0,  0,      0, 0, -1, 0,      0,  1 / 5],
-                         [0,  0,  0,  0,  0,  0,      0, 0,  1, 0,  4 / 5, 3 / 25]])
-    return lin_comb
-
-def map_between_auxiliary_to_lagrangian(theta: dict, 
-                                        lagrangian_to_auxiliary: bool = True):
-    r"""Maps dictionary "theta" between "auxiliary" LECs to "lagrangian" LECs.
-    
-    Parameters
-    ----------
-    theta : dict
-        A dictionary of parameters, as used by Potential, FOM, & ROM. For this function the parameters
-        must be either in "lagrangian" LECs or "auxiliary" LECs.
-    lagrangian_to_auxiliary : bool (optional)
-        When `True`, `theta` is assumed to be in the "lagrangian" LECs and will me mapped to the
-        "auxiliary" LECs. When `False, "auxiliary" will be mapped to "lagrangian".
-    
-    Returns
-    -------
-    mapped_theta : dict
-        A dictionary of parameters, as used fby Potential, FOM, ROM. This is the result after mapping
-        to either "auxiliary" LECs or "lagrangian" LECs, depending on the setting of `lagrangian_to_auxiliary`.
-    """
-    # define dummy dicts defined for dedicated determination of "data", or "DDDDDDD" for short
-    lagrangian_dict = {"C0": 1., "CS": 1, "CNN": 1, "CPP": 1, "CT": 1,
-                       "C1": 1, "C2": 1, "C3": 1, "C4": 1, "C5": 1, "C6": 1, "C7": 1}
-    auxiliary_dict = {"d0": 1, "d11": 1, "d22": 1, "dNN": 1, "dPP": 1,
-                      "d1": 1, "d2": 1, "d3": 1, "d4": 1, "d5": 1, "d6": 1, "d7": 1}
-    
-    # if the given parameters were "lagrangian" LECs, then we want to map them to "auxiliary" LECs
-    if lagrangian_to_auxiliary:
-        # get a (sorted) fully populated dict of parameters
-        theta_copy = {}  # define empty dict, to populate
-        for parameter in lagrangian_dict:
-            if parameter not in theta:
-                theta_copy[parameter] = 0
-            else:
-                theta_copy[parameter] = theta[parameter]
-        
-        # now map them
-        mapped_parameter_values = (chiral_lagrangian_to_auxiliary() @
-                                   np.array(list(theta_copy.values())))
-        mapped_theta = {}
-        for i, parameter in enumerate(auxiliary_dict.keys()):
-            parameter_value = mapped_parameter_values[i]
-            if parameter_value != 0.:
-                mapped_theta[parameter] = parameter_value
-    
-    # if the given parameters were "auxiliary" LECs, then we want to map them to "lagrangian" LECs
-    else:
-        # get a (sorted) fully populated dict of parameters
-        theta_copy = {}
-        for parameter in auxiliary_dict:
-            if parameter not in theta:
-                theta_copy[parameter] = 0
-            else:
-                theta_copy[parameter] = theta[parameter]
-        
-        # now map them
-        mapped_parameter_values = (np.linalg.inv(chiral_lagrangian_to_auxiliary()) @
-                                   np.array(list(theta_copy.values())))
-        mapped_theta = {}
-        for i, parameter in enumerate(lagrangian_dict.keys()):
-            parameter_value = mapped_parameter_values[i]
-            if parameter_value != 0.:
-                mapped_theta[parameter] = parameter_value
-    return mapped_theta
-
-def map_auxiliary_to_spectroscopic(theta: dict, 
-                                   auxiliary_to_spectroscopic: bool = True, 
-                                   kept_parameters=None):
-    r"""Maps dictionary "theta" between "auxiliary" LECs to "spectroscopic" LECs
-    
-    Parameters
-    ----------
-    theta : dict
-        A dictionary of parameters, as used by Potential, FOM, ROM. For this function the parameters
-        must be either in "spectroscopic" LECs or "auxiliary" LECs.
-    auxiliary_to_spectroscopic : bool (optional)
-        When `True`, `theta` is assumed to be in the "auxiliary" LECs and will me mapped to the
-        "spectroscopic" LECs. When `False, "spectroscopic" will me mapped to "auxiliary".
-    kept_parameters : list (optional)
-        When given a list of strings of LEC names, only the specified LECs in the list will be used.
-        This is to avoid "unexpected" LECs appearing from the mapping, as the mapping here is _not_ one-to-one.
-    
-    Returns
-    -------
-    mapped_theta : dict
-        A dictionary of parameters, as used by Potential, FOM, ROM. This is the result after mapping
-        to either "spectroscopic" LECs or "auxiliary" LECs, depending on the setting of `auxiliary_to_spectroscopic`.
-    """
-    # define dummy dicts defined for dedicated determination of "data", or "DDDDDDD" for short
-    auxiliary_dict = {"d0": 1, "d11": 1, "d22": 1, "dNN": 1, "dPP": 1,
-                      "d1": 1, "d2": 1, "d3": 1, "d4": 1, "d5": 1, "d6": 1, "d7": 1}
-    spectroscopic_dict = {"d0": 1,
-                          "d11_np": 1, 
-                          "d22_np": 1,
-                          "d22_nn": 1, 
-                          "d22_pp": 1,
-                          "D_1S0": 1,
-                          "D_3S1": 1,
-                          "d2": 1,
-                          "D_3D1": 1, 
-                          "Dpr_3D1": 1,
-                          "D_1P1": 1,
-                          "D_3P0": 1, 
-                          "Dpr_3P0": 1,
-                          "D_3P1": 1, 
-                          "Dpr_3P1": 1,
-                          "D_3P2": 1, 
-                          "Dpr_3P2": 1,
-                          "d7": 1,
-                          "D_3F2": 1, 
-                          "Dpr_3F2": 1}
-    # if the given parameters were "lagrangian" LECs, then we want to map them to "auxiliary" LECs
-    if auxiliary_to_spectroscopic:
-        if kept_parameters is None:
-            kept_parameters = list(spectroscopic_dict.keys())
-        # get a (sorted) fully populated dict of parameters
-        theta_copy = {}
-        for parameter in auxiliary_dict:
-            if parameter in theta:
-                theta_copy[parameter] = theta[parameter]
-            else:
-                theta_copy[parameter] = 0  # to avoid matrix multiplication errors
-        
-        # now map them
-        mapped_parameter_values = (chiral_auxiliary_to_spectroscopic() @
-                                   np.array(list(theta_copy.values())))
-        # and save them to a new dict, with the new LECs names
-        mapped_theta = {}
-        for i, parameter in enumerate(spectroscopic_dict.keys()):
-            parameter_value = mapped_parameter_values[i]
-            if (parameter_value != 0) and (parameter in kept_parameters):
-                mapped_theta[parameter] = parameter_value
-    else:
-        if kept_parameters is None:
-            kept_parameters = list(auxiliary_dict.keys())
-        # get a (sorted) fully populated dict of parameters
-        theta_copy = {}
-        for parameter in spectroscopic_dict:
-            if parameter not in theta:
-                theta_copy[parameter] = 0
-            else:
-                theta_copy[parameter] = theta_copy[parameter]
-        
-        # now map them
-        mapped_parameter_values = (np.linalg.pinv(chiral_auxiliary_to_spectroscopic()) @
-                                   np.array(list(theta_copy.values())))  # the determined individual could get around using a pseudo-inverse here
-        # and save them to a new dict, with the new LECs names
-        mapped_theta = {}
-        for i, parameter in enumerate(auxiliary_dict.keys()):
-            parameter_value = mapped_parameter_values[i]
-            if (parameter_value != 0) and (parameter in kept_parameters):
-                mapped_theta[parameter] = parameter_value
-    
-    return mapped_theta
-
-def map_lagrangian_to_spectroscopic(theta, 
-                                    lagrangian_to_spectroscopic=True, 
-                                    kept_parameters=None):
-    r"""Wrapper for map_between_auxiliary_to_lagrangian() and map_auxiliary_to_spectroscopic() for convenience.
-    
-    Parameters
-    ----------
-    theta : dict
-        A dictionary of parameters, as used by Potential, FOM, ROM. For this function the parameters
-        must be either in "lagrangian" LECs or "spectroscopic" LECs.
-    lagrangian_to_spectroscopic : bool (optional)
-        When `True`, `theta` is assumed to be in the "lagrangian" LECs and will me mapped to the
-        "spectroscopic" LECs. When `False, "spectroscopic" will be mapped to "lagrangian".
-    kept_parameters : list (optional)
-        When given a list of strings of LEC names, only the specified LECs in the list will be used.
-        This is to avoid "unexpected" LECs appearing from the mapping, as the mapping here is _not_ one-to-one.
-    
-    Returns
-    -------
-    mapped_theta : dict
-        A dictionary of parameters, as used by Potential, FOM, ROM. This is the result after mapping
-        to either "spectroscopic" LECs or "lagrangian" LECs, depending on the setting of `lagrangian_to_spectroscopic`.
-    """
-    if lagrangian_to_spectroscopic:
-        lagrangian_theta = theta.copy()
-        auxiliary_theta = map_between_auxiliary_to_lagrangian(lagrangian_theta,
-                                                              lagrangian_to_auxiliary=True)
-        spectroscopic_theta = map_auxiliary_to_spectroscopic(auxiliary_theta,
-                                                             auxiliary_to_spectroscopic=True,
-                                                             kept_parameters=kept_parameters)
-        return spectroscopic_theta
-    else:
-        spectroscopic_theta = theta.copy()
-        auxiliary_theta = map_auxiliary_to_spectroscopic(spectroscopic_theta,
-                                                         auxiliary_to_spectroscopic=False,
-                                                         kept_parameters=kept_parameters)
-        lagrangian_theta = map_between_auxiliary_to_lagrangian(auxiliary_theta,
-                                                               lagrangian_to_auxiliary=False)
-        return lagrangian_theta
-
-"""
-Here are the matrices needed for mapping between the different chiral lecs. It's more convenient to 
-look at (and import/call) matrices instead of functional-versions of these matrices. Plus I can't mess 
-up the order of matrices when going between lagrangian and spectroscopic lecs.
-"""
-lagrangian_to_auxiliary = chiral_lagrangian_to_auxiliary()
-auxiliary_to_lagrangian = np.linalg.inv(chiral_lagrangian_to_auxiliary())
-
-auxiliary_to_spectroscopic = chiral_auxiliary_to_spectroscopic()
-spectroscopic_to_auxiliary = np.linalg.pinv(chiral_auxiliary_to_spectroscopic())  # the determined individual could get around using a pseudo-inverse here
-
-lagrangian_to_spectroscopic = (chiral_auxiliary_to_spectroscopic() @
-                               chiral_lagrangian_to_auxiliary())
-spectroscopic_to_lagrangian = (np.linalg.inv(chiral_lagrangian_to_auxiliary()) @
-                               np.linalg.pinv(chiral_auxiliary_to_spectroscopic()))  # the determined individual could get around using a pseudo-inverse here
-
-
-# this is for importing convenience
-mapping_dict = {"lagrangian_to_auxiliary": lagrangian_to_auxiliary,
-                "auxiliary_to_lagrangian": auxiliary_to_lagrangian,
-                "auxiliary_to_spectroscopic": auxiliary_to_spectroscopic,
-                "spectroscopic_to_auxiliary": spectroscopic_to_auxiliary,
-                "lagrangian_to_spectroscopic": lagrangian_to_spectroscopic,
-                "spectroscopic_to_lagrangian": spectroscopic_to_lagrangian}
 
 
 class Potential:
@@ -737,3 +469,272 @@ class DoItYourselfPotential:
         the_potential_array = self.parameter_independent_array @ theta_array
         
         return the_potential_array
+
+
+
+
+###   these functions are moved below the classes as they are the last thing that one should consider when looking at this file.   ###
+def chiral_lagrangian_to_auxiliary():
+    """Transformation matrix to go from "lagrangian" LECs to "auxiliary" LECs
+    basis: {C0, CT, CS, C1, C2, ..., C7, CNN, CPP}
+    """
+    #               C0 CT CS C1  C2 C3  C4  C5  C6  C7  CNN  CPP
+    mat = np.array([[1, 0, 0, 0,  0, 0,  0,  0,  0,   0,  0,  0],
+                    [0, 1, 0, 0,  1, 0,  0,  0,  0,   0,  0,  0],
+                    [0, 1, 0, 0, -3, 0,  0,  0,  0,   0,  0,  0],
+                    [0, 1, 1, 0, -3, 0,  0,  0,  0,   0,  0,  0],
+                    [0, 1, 0, 1, -3, 0,  0,  0,  0,   0,  0,  0],
+                    [0, 0, 0, 0,  0, 1, -3,  1, -3,   0,  0,  0],
+                    [0, 0, 0, 0,  0, 0,  0,  0,  0,   0,  1, -3],
+                    [0, 0, 0, 0,  0, 1,  1, -3, -3,   0,  0,  0],
+                    [0, 0, 0, 0,  0, 1,  1,  1,  1,   0,  0,  0],
+                    [0, 0, 0, 0,  0, 1, -3, -3,  9,   0,  0,  0],
+                    [0, 0, 0, 0,  0, 0,  0,  0,  0, 0.5,  0,  0],
+                    [0, 0, 0, 0,  0, 0,  0,  0,  0,   0,  1,  1]])
+    return mat
+
+def chiral_auxiliary_to_spectroscopic():
+    """Transformation matrix to go from "auxiliary" LECs to "spectroscopic" LECs
+    basis: {d0, d11, d22, dNN, dPP, d1, d2, ..., d7}
+    """
+    #                    d0 d11 d22 dNN dPP  d1     d2  d3  d4 d5     d6      d7
+    lin_comb = np.array([[1,  0,  0,  0,  0,  0,      0, 0,  0, 0,      0,      0],
+                         [0,  1,  0,  0,  0,  0,      0, 0,  0, 0,      0,      0],
+                         [0,  0,  1,  0,  0,  0,      0, 0,  0, 0,      0,      0],
+                         [0,  0,  0,  1,  0,  0,      0, 0,  0, 0,      0,      0],
+                         [0,  0,  0,  0,  1,  0,      0, 0,  0, 0,      0,      0],
+                         [0,  0,  0,  0,  0,  0,      0, 1,  0, 0,      0,     -1],
+                         [0,  0,  0,  0,  0,  1,  1 / 3, 0,  0, 0,      0,      0],
+                         [0,  0,  0,  0,  0,  0,      1, 0,  0, 0,      0,      0],
+                         [0,  0,  0,  0,  0, -1,  1 / 3, 0,  0, 0,      0,      0],
+                         [0,  0,  0,  0,  0,  1, 1 / 15, 0,  0, 0,  3 / 5,      0],
+                         [0,  0,  0,  0,  0,  0,     -1, 0,  0, 1,      0,      0],
+                         [0,  0,  0,  0,  0,  0,      0, 0, -1, 0,      0,      1],
+                         [0,  0,  0,  0,  0,  0,      0, 0,  1, 0,  2 / 5, -1 / 5],
+                         [0,  0,  0,  0,  0,  0,      0, 0, -1, 0,      0,     -1],
+                         [0,  0,  0,  0,  0,  0,      0, 0,  1, 0,  1 / 5,  3 / 5],
+                         [0,  0,  0,  0,  0,  0,      0, 0, -1, 0,      0, -1 / 5],
+                         [0,  0,  0,  0,  0,  0,      0, 0,  1, 0, -1 / 5, 7 / 25],
+                         [0,  0,  0,  0,  0,  0,      0, 0,  0, 0,      0,      1],
+                         [0,  0,  0,  0,  0,  0,      0, 0, -1, 0,      0,  1 / 5],
+                         [0,  0,  0,  0,  0,  0,      0, 0,  1, 0,  4 / 5, 3 / 25]])
+    return lin_comb
+
+def map_between_auxiliary_to_lagrangian(theta: dict, 
+                                        lagrangian_to_auxiliary: bool = True):
+    r"""Maps dictionary "theta" between "auxiliary" LECs to "lagrangian" LECs.
+    
+    Parameters
+    ----------
+    theta : dict
+        A dictionary of parameters, as used by Potential, FOM, & ROM. For this function the parameters
+        must be either in "lagrangian" LECs or "auxiliary" LECs.
+    lagrangian_to_auxiliary : bool (optional)
+        When `True`, `theta` is assumed to be in the "lagrangian" LECs and will me mapped to the
+        "auxiliary" LECs. When `False, "auxiliary" will be mapped to "lagrangian".
+    
+    Returns
+    -------
+    mapped_theta : dict
+        A dictionary of parameters, as used fby Potential, FOM, ROM. This is the result after mapping
+        to either "auxiliary" LECs or "lagrangian" LECs, depending on the setting of `lagrangian_to_auxiliary`.
+    """
+    # define dummy dicts defined for dedicated determination of "data", or "DDDDDDD" for short
+    lagrangian_dict = {"C0": 1., "CS": 1, "CNN": 1, "CPP": 1, "CT": 1,
+                       "C1": 1, "C2": 1, "C3": 1, "C4": 1, "C5": 1, "C6": 1, "C7": 1}
+    auxiliary_dict = {"d0": 1, "d11": 1, "d22": 1, "dNN": 1, "dPP": 1,
+                      "d1": 1, "d2": 1, "d3": 1, "d4": 1, "d5": 1, "d6": 1, "d7": 1}
+    
+    # if the given parameters were "lagrangian" LECs, then we want to map them to "auxiliary" LECs
+    if lagrangian_to_auxiliary:
+        # get a (sorted) fully populated dict of parameters
+        theta_copy = {}  # define empty dict, to populate
+        for parameter in lagrangian_dict:
+            if parameter not in theta:
+                theta_copy[parameter] = 0
+            else:
+                theta_copy[parameter] = theta[parameter]
+        
+        # now map them
+        mapped_parameter_values = (chiral_lagrangian_to_auxiliary() @
+                                   np.array(list(theta_copy.values())))
+        mapped_theta = {}
+        for i, parameter in enumerate(auxiliary_dict.keys()):
+            parameter_value = mapped_parameter_values[i]
+            if parameter_value != 0.:
+                mapped_theta[parameter] = parameter_value
+    
+    # if the given parameters were "auxiliary" LECs, then we want to map them to "lagrangian" LECs
+    else:
+        # get a (sorted) fully populated dict of parameters
+        theta_copy = {}
+        for parameter in auxiliary_dict:
+            if parameter not in theta:
+                theta_copy[parameter] = 0
+            else:
+                theta_copy[parameter] = theta[parameter]
+        
+        # now map them
+        mapped_parameter_values = (np.linalg.inv(chiral_lagrangian_to_auxiliary()) @
+                                   np.array(list(theta_copy.values())))
+        mapped_theta = {}
+        for i, parameter in enumerate(lagrangian_dict.keys()):
+            parameter_value = mapped_parameter_values[i]
+            if parameter_value != 0.:
+                mapped_theta[parameter] = parameter_value
+    return mapped_theta
+
+def map_auxiliary_to_spectroscopic(theta: dict, 
+                                   auxiliary_to_spectroscopic: bool = True, 
+                                   kept_parameters=None):
+    r"""Maps dictionary "theta" between "auxiliary" LECs to "spectroscopic" LECs
+    
+    Parameters
+    ----------
+    theta : dict
+        A dictionary of parameters, as used by Potential, FOM, ROM. For this function the parameters
+        must be either in "spectroscopic" LECs or "auxiliary" LECs.
+    auxiliary_to_spectroscopic : bool (optional)
+        When `True`, `theta` is assumed to be in the "auxiliary" LECs and will me mapped to the
+        "spectroscopic" LECs. When `False, "spectroscopic" will me mapped to "auxiliary".
+    kept_parameters : list (optional)
+        When given a list of strings of LEC names, only the specified LECs in the list will be used.
+        This is to avoid "unexpected" LECs appearing from the mapping, as the mapping here is _not_ one-to-one.
+    
+    Returns
+    -------
+    mapped_theta : dict
+        A dictionary of parameters, as used by Potential, FOM, ROM. This is the result after mapping
+        to either "spectroscopic" LECs or "auxiliary" LECs, depending on the setting of `auxiliary_to_spectroscopic`.
+    """
+    # define dummy dicts defined for dedicated determination of "data", or "DDDDDDD" for short
+    auxiliary_dict = {"d0": 1, "d11": 1, "d22": 1, "dNN": 1, "dPP": 1,
+                      "d1": 1, "d2": 1, "d3": 1, "d4": 1, "d5": 1, "d6": 1, "d7": 1}
+    spectroscopic_dict = {"d0": 1,
+                          "d11_np": 1, 
+                          "d22_np": 1,
+                          "d22_nn": 1, 
+                          "d22_pp": 1,
+                          "D_1S0": 1,
+                          "D_3S1": 1,
+                          "d2": 1,
+                          "D_3D1": 1, 
+                          "Dpr_3D1": 1,
+                          "D_1P1": 1,
+                          "D_3P0": 1, 
+                          "Dpr_3P0": 1,
+                          "D_3P1": 1, 
+                          "Dpr_3P1": 1,
+                          "D_3P2": 1, 
+                          "Dpr_3P2": 1,
+                          "d7": 1,
+                          "D_3F2": 1, 
+                          "Dpr_3F2": 1}
+    # if the given parameters were "lagrangian" LECs, then we want to map them to "auxiliary" LECs
+    if auxiliary_to_spectroscopic:
+        if kept_parameters is None:
+            kept_parameters = list(spectroscopic_dict.keys())
+        # get a (sorted) fully populated dict of parameters
+        theta_copy = {}
+        for parameter in auxiliary_dict:
+            if parameter in theta:
+                theta_copy[parameter] = theta[parameter]
+            else:
+                theta_copy[parameter] = 0  # to avoid matrix multiplication errors
+        
+        # now map them
+        mapped_parameter_values = (chiral_auxiliary_to_spectroscopic() @
+                                   np.array(list(theta_copy.values())))
+        # and save them to a new dict, with the new LECs names
+        mapped_theta = {}
+        for i, parameter in enumerate(spectroscopic_dict.keys()):
+            parameter_value = mapped_parameter_values[i]
+            if (parameter_value != 0) and (parameter in kept_parameters):
+                mapped_theta[parameter] = parameter_value
+    else:
+        if kept_parameters is None:
+            kept_parameters = list(auxiliary_dict.keys())
+        # get a (sorted) fully populated dict of parameters
+        theta_copy = {}
+        for parameter in spectroscopic_dict:
+            if parameter not in theta:
+                theta_copy[parameter] = 0
+            else:
+                theta_copy[parameter] = theta_copy[parameter]
+        
+        # now map them
+        mapped_parameter_values = (np.linalg.pinv(chiral_auxiliary_to_spectroscopic()) @
+                                   np.array(list(theta_copy.values())))  # the determined individual could get around using a pseudo-inverse here
+        # and save them to a new dict, with the new LECs names
+        mapped_theta = {}
+        for i, parameter in enumerate(auxiliary_dict.keys()):
+            parameter_value = mapped_parameter_values[i]
+            if (parameter_value != 0) and (parameter in kept_parameters):
+                mapped_theta[parameter] = parameter_value
+    
+    return mapped_theta
+
+def map_lagrangian_to_spectroscopic(theta, 
+                                    lagrangian_to_spectroscopic=True, 
+                                    kept_parameters=None):
+    r"""Wrapper for map_between_auxiliary_to_lagrangian() and map_auxiliary_to_spectroscopic() for convenience.
+    
+    Parameters
+    ----------
+    theta : dict
+        A dictionary of parameters, as used by Potential, FOM, ROM. For this function the parameters
+        must be either in "lagrangian" LECs or "spectroscopic" LECs.
+    lagrangian_to_spectroscopic : bool (optional)
+        When `True`, `theta` is assumed to be in the "lagrangian" LECs and will me mapped to the
+        "spectroscopic" LECs. When `False, "spectroscopic" will be mapped to "lagrangian".
+    kept_parameters : list (optional)
+        When given a list of strings of LEC names, only the specified LECs in the list will be used.
+        This is to avoid "unexpected" LECs appearing from the mapping, as the mapping here is _not_ one-to-one.
+    
+    Returns
+    -------
+    mapped_theta : dict
+        A dictionary of parameters, as used by Potential, FOM, ROM. This is the result after mapping
+        to either "spectroscopic" LECs or "lagrangian" LECs, depending on the setting of `lagrangian_to_spectroscopic`.
+    """
+    if lagrangian_to_spectroscopic:
+        lagrangian_theta = theta.copy()
+        auxiliary_theta = map_between_auxiliary_to_lagrangian(lagrangian_theta,
+                                                              lagrangian_to_auxiliary=True)
+        spectroscopic_theta = map_auxiliary_to_spectroscopic(auxiliary_theta,
+                                                             auxiliary_to_spectroscopic=True,
+                                                             kept_parameters=kept_parameters)
+        return spectroscopic_theta
+    else:
+        spectroscopic_theta = theta.copy()
+        auxiliary_theta = map_auxiliary_to_spectroscopic(spectroscopic_theta,
+                                                         auxiliary_to_spectroscopic=False,
+                                                         kept_parameters=kept_parameters)
+        lagrangian_theta = map_between_auxiliary_to_lagrangian(auxiliary_theta,
+                                                               lagrangian_to_auxiliary=False)
+        return lagrangian_theta
+
+"""
+Here are the matrices needed for mapping between the different chiral lecs. It's more convenient to 
+look at (and import/call) matrices instead of functional-versions of these matrices. Plus I can't mess 
+up the order of matrices when going between lagrangian and spectroscopic lecs.
+"""
+lagrangian_to_auxiliary = chiral_lagrangian_to_auxiliary()
+auxiliary_to_lagrangian = np.linalg.inv(chiral_lagrangian_to_auxiliary())
+
+auxiliary_to_spectroscopic = chiral_auxiliary_to_spectroscopic()
+spectroscopic_to_auxiliary = np.linalg.pinv(chiral_auxiliary_to_spectroscopic())  # the determined individual could get around using a pseudo-inverse here
+
+lagrangian_to_spectroscopic = (chiral_auxiliary_to_spectroscopic() @
+                               chiral_lagrangian_to_auxiliary())
+spectroscopic_to_lagrangian = (np.linalg.inv(chiral_lagrangian_to_auxiliary()) @
+                               np.linalg.pinv(chiral_auxiliary_to_spectroscopic()))  # the determined individual could get around using a pseudo-inverse here
+
+
+# this is for importing convenience
+mapping_dict = {"lagrangian_to_auxiliary": lagrangian_to_auxiliary,
+                "auxiliary_to_lagrangian": auxiliary_to_lagrangian,
+                "auxiliary_to_spectroscopic": auxiliary_to_spectroscopic,
+                "spectroscopic_to_auxiliary": spectroscopic_to_auxiliary,
+                "lagrangian_to_spectroscopic": lagrangian_to_spectroscopic,
+                "spectroscopic_to_lagrangian": spectroscopic_to_lagrangian}
