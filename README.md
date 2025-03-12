@@ -8,13 +8,13 @@ This code accompanies the paper _Greedy Emulators for Nuclear Two-Body Scatterin
 
 <img align="right" width="370" src="/markdown_figures/greedy-vs-POD.jpg">
 
-There are three main files (classes) in this repository, the nuclear potential (Minnesota and GT+ Chiral) `/modules/Potential.py`, the Matrix Numerov method full order model `/modules/FOM.py`, and the Galerkin Projection based reduced order models `modules/ROM.py`.
+There are three main files (classes) in this repository, the nuclear potential (Minnesota and GT+ local chiral (as laid out in [Gezerlis et. al.](https://doi.org/10.1103/PhysRevC.90.054323)) `/modules/Potential.py`, the Matrix Numerov method full order model `/modules/FOM.py`, and the Galerkin Projection based reduced order models `modules/ROM.py`.
 
 This code is meant to be adaptable, _particularly_ `Potential.py`. Notably, there is a pre-built `DoItYourselfPotential` class that attempts to walk through how one would go about implementing their own _affine_ nuclear potential to be used with the solver and emulators.
 
 The solvers laid out in `FOM.py` are strictly for the matrix Numerov method (with or without $a$ and $b$). Other solvers can be implemented to be used with the emulators, so long as the naming scheme of the newly implemented solver is consistent for the offline projections.
 
-The emulators implemented in `ROM.py` are the Galerkin reduced order model (G-ROM) and the least-squares Petrov Galerkin reduced order model (LSPG-ROM). Both emulators have error estimators. In general, from my testing, without error estimation the G-ROM is faster than the LSPG-ROM, and with error estimation the LSPG-ROM is faster than the G-ROM. Although emulator speedups and runtimes vary with implementation and machines, this code has speedups (as run on _my_ machines) as follows:
+The emulators implemented in `ROM.py` are the Galerkin reduced order model (G-ROM) and the least-squares Petrov-Galerkin reduced order model (LSPG-ROM). Both emulators have error estimators. In general, from my testing, without error estimation the G-ROM is faster than the LSPG-ROM, and with error estimation the LSPG-ROM is faster than the G-ROM. Although emulator speedups and runtimes vary with implementation and machines, this code has speedups (as run on _my_ machines) as follows:
 
 |     CPU type     | FOM <br>(matrix Numerov) | G-ROM <br>| G-ROM w/ <br> error est. | LSPG-ROM <br>| LSPG-ROM w/ <br> error est. |
 |:----------------:|:------------------------:|:---------:|:------------------------:|:------------:|:---------------------------:|
