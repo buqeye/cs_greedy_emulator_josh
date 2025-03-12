@@ -14,6 +14,15 @@ This code is meant to be adaptable, _particularly_ `Potential.py`. Notably, ther
 
 The solvers laid out in `FOM.py` are strictly for the matrix Numerov method (with or without $a$ and $b$). Other solvers can be implemented to be used with the emulators, so long as the naming scheme of the newly implemented solver is consistent for the offline projections.
 
+The emulators implemented in `ROM.py` are the Galerkin reduced order model (G-ROM) and the least-squares Petrov Galerkin reduced order model (LSPG-ROM). Both emulators have error estimators. In general, from my testing, without error estimation the G-ROM is faster than the LSPG-ROM, and with error estimation the LSPG-ROM is faster than the G-ROM. Although emulator speedups and runtimes vary with implementation and machines, this code has speedups (as run on _my_ machines) as follows:
+
+|     CPU type     | FOM (matrix Numerov) | G-ROM | G-ROM w/ error est. | LSPG-ROM | LSPG-ROM w/ error est. |
+|------------------|----------------------|-------|---------------------|----------|------------------------|
+|        ARM       |            1         |  ~10x |         ~4x         |   ~4.5x  |          ~4.5x         |
+|        x86       |            1         |  ~7x  |         ~2.5x       |   ~3x    |           ~3x          |
+| github codespace |            1         | ~5.5x |         ~2x         |   ~2.5x  |           ~2.5x        |
+
+
 ---
 ## Example Usage
 ```python
