@@ -60,10 +60,10 @@ emulator.emulation_errors_at_theta(potential.default_theta)
 
 ## Python Environment
 
-Creating the virtual environment (currently `numba` only wants to work with versions of python less than 3.13),
+Creating the virtual environment,
 
 ``` shell
-python3.12 -m venv ./venv
+python3 -m venv ./venv
 ```
 
 using it,
