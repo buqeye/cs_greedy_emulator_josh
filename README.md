@@ -37,7 +37,8 @@ r = np.linspace(0, 12, 1000)
 potential = Potential.Potential("minnesota", r, l=0)
 
 # initialize the solver
-solver = FOM.MatrixNumerovSolver(potential)
+energy = 50  # center-of-mass energy in MeV
+solver = FOM.MatrixNumerovSolver(potential, energy=energy)
 
 # initialize the emulator 
 parameter_bounds = {"V_s": [-400., 0.]}  # Vary the parameter "V_s" between -400 MeV and 0 MeV
