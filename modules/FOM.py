@@ -2,7 +2,6 @@
 # GitHub: https://github.com/Ub3rJosh
 # Email: jm998521@ohio.edu (joshuamaldonado4432@gmail.com)
 
-
 ###   ###   ###   imports   ###   ###   ###
 import numpy as np
 from scipy.sparse import spdiags, diags
@@ -21,7 +20,7 @@ class MatrixNumerovSolver:
                  zeta: bool = 1,
                  y_0=0.,
                  ypr_0=0.):
-        r"""Full Order Model (FOM) solver for the Radial Schrodinger Equation using the matrix Numerov Method.
+        r"""Full Order Model (FOM) solver for the Radial Schrodinger Equation using the matrix Numerov method.
         
         This FOM takes advantage of the affine decomposition of the nuclear potential to accelerate 
         computation. Given a potential that has attributes as given in `Potential.py` in this repository, 
@@ -30,8 +29,8 @@ class MatrixNumerovSolver:
         Parameters
         ----------
         potential : Potential object
-            The potential for which y (chi or psi) will be found on. This must be in coordinate space. This should be 
-            an Potential instance from Potential.py.
+            The potential for which y (chi or psi) will be found on. This must be in coordinate space. 
+            This should be an Potential instance from Potential.py.
         use_ab : bool (optional)
             A toggle to include the K matrix coefficients, $a$ and $b$. The wavefunction calculation
             in either case is numerically identical. This is `False` by default.
@@ -45,9 +44,9 @@ class MatrixNumerovSolver:
         y_0 : number (optional)
             The initial value of the y (chi or psi). For regular solutions, this should always be `0.`
         ypr_0 : number (optional)
-            The initial value of the derivative of y (chi or psi). For the inhomogeneous RSE, `ypr_0=0.` is used.
-            When `zeta=0` and `ypr_0=0.` (the default for `ypr_0`), the initial conditions will automatically
-            be corrected to `ypr_0=1`, based on the given Potential's mesh.
+            The initial value of the derivative of y (chi or psi). For the inhomogeneous RSE, `ypr_0=0.` 
+            is used. When `zeta=0` and `ypr_0=0.` (the default for `ypr_0`), the initial conditions will 
+            automatically be corrected to `ypr_0=1`, based on the given Potential's mesh.
         """
         ###   ###   ###   variable definitions   ###   ###   ###
          # definitions taken from the potential
@@ -267,8 +266,8 @@ class MatrixNumerovSolver:
     @cached_property  # This should not be the case if we want to change the energy !
     def const_b(self):
         r"""Calculates the parameter-independent component of the right-hand side of the ODE
-        NOTE: This computes equation 27b. Here, "b" is used in place of "bold s" to avoid confusion with 
-              the $s$ in Numerov's method.
+        NOTE: This computes equation 27b. Here, "b" is used in place of "bold s" to avoid confusion 
+              with the $s$ in Numerov's method.
         
         Returns
         -------

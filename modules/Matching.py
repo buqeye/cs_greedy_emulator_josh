@@ -2,6 +2,7 @@
 # GitHub: https://github.com/Ub3rJosh
 # Email: jm998521@ohio.edu (joshuamaldonado4432@gmail.com)
 
+###   ###   ###   imports   ###   ###   ###
 import numpy as np
 from scipy.sparse import diags
 from numba import njit
@@ -14,7 +15,7 @@ def propagate_delta_error(a_tilde,
                           wavefunction_error, 
                           M, 
                           M_pinv=None):
-    """Propagates the errors from the wavefunction get a maximum propagated error to the phaseshift.
+    r"""Propagates the errors from the wavefunction get a maximum propagated error to the phaseshift.
        NOTE: This computes equation 52 in the paper.
     
     Parameters
@@ -37,9 +38,7 @@ def propagate_delta_error(a_tilde,
         The maximum error on the phase shift, $delta_l$.
     """
     ab_error = propagate_ab_error(wavefunction_error, M, M_pinv=M_pinv)
-    ab_matrix = np.array([a_tilde, b_tilde])
-    denominator = np.linalg.norm(ab_matrix)
-    # denominator = np.sqrt(a_tilde ** 2 + b_tilde ** 2)
+    denominator = np.sqrt(a_tilde ** 2 + b_tilde ** 2)
     
     max_propagated_error = ab_error / denominator
     return max_propagated_error
@@ -52,7 +51,7 @@ def true_delta_error(a,
                      wavefunction_error, 
                      M, 
                      M_pinv=None):
-    """Propagates the errors from the wavefunction get a maximum propagated error to the phaseshift.
+    r"""Propagates the errors from the wavefunction get a maximum propagated error to the phaseshift.
        NOTE: This computes equation 52 in the paper.
     
     Parameters
@@ -89,13 +88,13 @@ def true_delta_error(a,
 def propagate_ab_error(wavefunction_error, 
                        M, 
                        M_pinv=None):
-    """Propagates the errors from the wavefunction get a maximum propagated error to $a$ and $b$.
+    r"""Propagates the errors from the wavefunction get a maximum propagated error to $a$ and $b$.
        NOTE: This computes equation 53 in the paper.
     
     Parameters
     ----------
     wavefunction_error : float
-        The norm-error on the wave function, || chi_FOM - chi_ROM ||.
+        The norm-error on the wave function, || y_FOM - y_ROM ||.
     M : numpy array (matrix)
         The left-hand side of the least-squares matching calculation
     M_pinv : numpy array (matrix) (optional)
@@ -120,7 +119,7 @@ def true_ab_error(a,
                   b, 
                   b_tilde, 
                   ret_all_errors=False):
-    """True error from $a$ and $b$.
+    r"""True error from $a$ and $b$.
     
     Parameters
     ----------
@@ -370,7 +369,7 @@ def matching_using_least_squares(r,
                                  zeta: bool = 1,
                                  F_over_all_r=None,
                                  return_pieces: bool = False):
-    """Least-squares matching procedure. Does not use an inverse logarithmic derivative.
+    r"""Least-squares matching procedure. Does not use an inverse logarithmic derivative.
     NOTE: This computes equation 14/30 in the paper using equations 15-20.
     
     This function can be used in place of `match`, which uses an inverse log derivative in order to 
@@ -424,7 +423,7 @@ def matching_using_least_squares(r,
     a += zeta
     
     K_l = b / a
-    delta_l = np.atan2(b, a)
+    delta_l = np.arctan2(b, a)
     S_l = (1 + 1j * K_l) / (1 - 1j * K_l)
     T_l = K_l / (1 - 1j * K_l)
     

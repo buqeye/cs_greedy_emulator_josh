@@ -8,7 +8,7 @@ from numba import njit
 
 @njit(fastmath=True)
 def MGS(A_matrix, new_vector, atol=1e-8, rtol=1e-8):
-    """Modified Gram-Schmidt function that orthonormalizes the one vector to the basis.
+    r"""Modified Gram-Schmidt function that orthonormalizes the one vector to the basis.
        NOTE: This function assumes that `A_matrix` is already orthonormalized!
     
     Modified Gram Schmidt:
@@ -53,7 +53,7 @@ def MGS(A_matrix, new_vector, atol=1e-8, rtol=1e-8):
 
 @njit(fastmath=True)
 def unoptimized_MGS(A_matrix):
-    """Modified Gram-Schmidt function that orthonormalizes the _entire_ basis.
+    r"""Modified Gram-Schmidt function that orthonormalizes the _entire_ basis.
     
     Computes an orthonormal basis from the given basis vectors using modified gram schmidt. This is 
     the "unoptimized MGS" because this function does not make any assumptions to accelerate computation.
@@ -66,7 +66,7 @@ def unoptimized_MGS(A_matrix):
     Returns
     -------
     orthonormal_matrix : numpy array
-        The orthonormalized basis given in A_matrix.
+        The orthonormalized basis given in `A_matrix`.
     """
     A = np.copy(A_matrix)
     orthogonal_matrix = np.copy(A)

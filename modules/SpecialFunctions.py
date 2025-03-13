@@ -2,14 +2,17 @@
 # GitHub: https://github.com/Ub3rJosh
 # Email: jm998521@ohio.edu (joshuamaldonado4432@gmail.com)
 
+###   ###   ###   imports   ###   ###   ###
 # import numpy as np
 from scipy.special import spherical_jn, spherical_yn
 from modules.Constants import *
 
 
 ###   ###   ###   spherical bessels   ###   ###   ###
-def F(r, k, l: int):
-    """Riccati Bessel F function.
+def F(r, 
+      k, 
+      l: int):
+    r"""Riccati Bessel F function.
     
     Parameters
     ----------
@@ -31,8 +34,10 @@ def F(r, k, l: int):
     return riccati_bessel_F
 
 
-def G(r, k, l: int):
-    """Riccati Bessel G function.
+def G(r, 
+      k, 
+      l: int):
+    r"""Riccati Bessel G function.
     
     Parameters
     ----------
@@ -54,8 +59,10 @@ def G(r, k, l: int):
     return riccati_bessel_G
 
 
-def F_prime(r, k, l: int):
-    """Analytic derivative of Riccati Bessel F function.
+def F_prime(r, 
+            k, 
+            l: int):
+    r"""Analytic derivative of Riccati Bessel F function.
     
     Parameters
     ----------
@@ -77,8 +84,10 @@ def F_prime(r, k, l: int):
     return riccati_bessel_F_prime
 
 
-def G_prime(r, k, l: int):
-    """Analytic derivative of Riccati Bessel G function.
+def G_prime(r, 
+            k, 
+            l: int):
+    r"""Analytic derivative of Riccati Bessel G function.
     
     Parameters
     ----------
@@ -100,8 +109,15 @@ def G_prime(r, k, l: int):
     return riccati_bessel_G_prime
 
 
-def H(r, k, l: int, plus: bool = True, derivative: bool = False):
-    """Coulomb Hankle function and its analytic derivative.
+def H(r, 
+      k, 
+      l: int, 
+      plus: bool = True, 
+      derivative: bool = False):
+    r"""Coulomb Hankle function and its analytic derivative.
+    
+    This function encompasses the implementation of H+, H'+, H-, H'-. These different functions can
+    be accessed using the `plus` and `derivative` boolean args.
     
     Parameters
     ----------
@@ -141,10 +157,11 @@ def analytic_phi(r,
                  l : int, 
                  energy=50.,
                  mass=neutron_mass / 2):
-    """Analytic implementation of the free wave, phi
+    r"""Analytic implementation of the free wave, phi.
     
     Phi from its analytic form from Thompson & Nunes. This is also scaled by 1/k, which gives the 
-    function units of fm^(-1).
+    function units of fm^(-1). This is referred to as "analytic" because it is calling scipy special 
+    functions to calculate phi, rather than obtaining it in other ways.
     
     Parameters
     ----------
@@ -161,7 +178,7 @@ def analytic_phi(r,
     -------
     phi : numpy array
         The free wave for the particle. This must be the result that one gets for the full wave, 
-        psi, when there is no potential. This is in units of fm^(-1)/
+        psi, when there is no potential. This is in units of fm^(-1).
     """
     p2 = (2 * mass * energy) / hbarc ** 2  # fm ^(-2)
     k = p2 ** 0.5  # p = hbar k but hbar here is 1

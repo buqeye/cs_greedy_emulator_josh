@@ -8,7 +8,7 @@ import numpy as np
 import pandas
 import sys
 sys.path.append("./modules")
-import Potential, FOM, ROM, Matching
+from modules import Potential, FOM, ROM, Matching
 
 
 test_values_dict = {}

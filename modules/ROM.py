@@ -2,7 +2,6 @@
 # GitHub: https://github.com/Ub3rJosh
 # Email: jm998521@ohio.edu (joshuamaldonado4432@gmail.com)
 
-
 ###   ###   ###   imports   ###   ###   ###
 import numpy as np
 import scipy
@@ -127,17 +126,8 @@ class Emulator:
                 - Using an orthonormal basis
                 - Using error bounds (via calculations singular values) (saves time when testing)
                 - Using the scaled estimated error (will prevent the "one extra FOM calculation")
-                - Using with or without an excessive number of FOM calculations (via `use_practically`) (saves time when testing)
-        
-        Examples of constructing the class:
-            r = np.linspace(0, 12, 1000)
-            potential = Potential.Potential("minnesota", r)  # required for solver
-            solver = FOM.MatrixNumerov_ab(potential)  # required for emulator
-            
-            parameter_bounds = ROM.apply_range_factor(potential.default_theta, 0.5, potential=potential)  # parameter space for training emulator
-            non_greedy_emulator = ROM.Emulator(parameter_bounds, solver, greedy=False)
-            
-            non_greedy_emulator.train()
+                - Using with or without an excessive number of FOM calculations (via `use_practically`) 
+                  and saves time when testing
         
         Parameters
         ----------
@@ -173,7 +163,8 @@ class Emulator:
             When `True`, the error bounds will not be calculated. This eliminates the need for the 
             calculation of singular values. Can be set to `True` when testing.
         orthonormal_basis : bool (optional)
-            When `True`, the basis will be orthonormalized. This should pretty much always be set to `True`.
+            When `True`, the basis will be orthonormalized. This should pretty much always be set to 
+            `True` for numerical stability and ensuring only useful snapshots are added to the basis.
         greedy : bool (optional)
             Whether the emulator will use the greedy algorithm to construct snapshot_parameters or not.
         sampling_method : string (optional)
@@ -855,7 +846,8 @@ class Emulator:
         
         The error estimator for any emulation method (of the two current ones, "G-ROM" and "LSPG-ROM"). 
         This calculation will use the equation Y.dagger A(theta) X coefficients = Y.dagger b(theta).
-        For this function to work, either theta and b0_b1 should be given, _or_ $A$ and $b$ should be given.
+        For this function to work, either theta and b0_b1 should be given, _or_ $A$ and $b$ should be 
+        given.
         
         Parameters
         ----------
@@ -1160,8 +1152,8 @@ class Emulator:
         Parameters
         ----------
         n_basis : int
-            The number of snapshots currently in the basis. This input value should be starting from 1, 
-            not 0. So if there are five basis vectors, the input should be 5.
+            The number of snapshots currently in the basis. This input value should be starting from 
+            1, not 0. So if there are five basis vectors, the input should be 5.
         theta : dict
             The parameter value at which the emulator will emulate with the given basis.
         one_extra_FOM_calculation : array-like
@@ -1376,6 +1368,9 @@ class Emulator:
             
             
             # iterate across parameter space and check errors
+            # NOTE: Although not in this implementation, one can parallelize this loop by partitioning
+            #       the parameter space across available threads, greatly reducing training time.
+            #       This should be a case of embarrassingly parallel computation.
             for param_i in np.arange(self.param_pts):
                 current_parameter = self.parameters_at_index(param_i)  # get current parameter
                 theta_vec = self.solver.theta_args(current_parameter)  # "vector-ify" the current parameter

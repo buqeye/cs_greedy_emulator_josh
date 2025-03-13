@@ -2,12 +2,12 @@
 # GitHub: https://github.com/Ub3rJosh
 # Email: jm998521@ohio.edu (joshuamaldonado4432@gmail.com)
 
+###   ###   ###   imports   ###   ###   ###
 import numpy as np
 from scipy.integrate import solve_ivp
-
-from Constants import *
-from SpecialFunctions import analytic_phi
-from Potential import chiral_affine_outside_of_class
+from modules.Constants import *
+from modules.SpecialFunctions import analytic_phi
+from modules.Potential import chiral_affine_outside_of_class
 
 
 def callable_chiral(r_value, theta, l=0, ll=0, j=0, S=0, channel=0):

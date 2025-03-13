@@ -26,7 +26,7 @@ def chiral_affine_outside_of_class(x,
                                    j: int = 0, 
                                    S: int = 0, 
                                    channel=0):
-    r"""Affine implementation of GT+ Chiral Potential.
+    r"""Affine implementation of GT+ Chiral Potential. Used for testing.
     
     This is a modified function built by Dr. Drischler. It builds the chiral potential using 
     Ingo Tews cpp and cython code that was slightly modified by Dr. Drischler.
@@ -37,8 +37,8 @@ def chiral_affine_outside_of_class(x,
         The coordinate space point that this function will be evaluated at. Notably, this function 
         is _not_ vectorized.
     chan : Channel object
-        This is a Channel object as constructed in chiral_constriction/Channel. This interfaces with the c++ code 
-        so the data types matter significantly.
+        This is a Channel object as constructed in chiral_constriction/Channel. This interfaces with 
+        the c++ code so the data types matter significantly.
     potId : int
         The "ID" for the potential. It should be made up of three ints "strung" together.
         potID = int1 int2 int3
@@ -242,8 +242,8 @@ class Potential:
                     The coordinate space point that this function will be evaluated at. Notably, 
                     this function is _not_ vectorized.
                 chan : Channel
-                    This is a Channel object as constructed in chiral_constriction/Channel. This interfaces with the 
-                    C++ code so the data types matter significantly.
+                    This is a Channel object as constructed in chiral_constriction/Channel. This 
+                    interfaces with the C++ code so the data types matter significantly.
                 potId : int
                     The "ID" for the potential. It should be made up of three ints "strung" together.
                     potID = int1 int2 int3
@@ -599,7 +599,8 @@ def map_auxiliary_to_spectroscopic(theta: dict,
         "spectroscopic" LECs. When `False, "spectroscopic" will me mapped to "auxiliary".
     kept_parameters : list (optional)
         When given a list of strings of LEC names, only the specified LECs in the list will be used.
-        This is to avoid "unexpected" LECs appearing from the mapping, as the mapping here is _not_ one-to-one.
+        This is to avoid "unexpected" LECs appearing from the mapping, as the mapping here is _not_ 
+        one-to-one.
     
     Returns
     -------
@@ -689,7 +690,8 @@ def map_lagrangian_to_spectroscopic(theta,
         "spectroscopic" LECs. When `False, "spectroscopic" will be mapped to "lagrangian".
     kept_parameters : list (optional)
         When given a list of strings of LEC names, only the specified LECs in the list will be used.
-        This is to avoid "unexpected" LECs appearing from the mapping, as the mapping here is _not_ one-to-one.
+        This is to avoid "unexpected" LECs appearing from the mapping, as the mapping here is _not_ 
+        one-to-one.
     
     Returns
     -------

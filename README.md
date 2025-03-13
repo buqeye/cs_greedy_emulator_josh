@@ -1,8 +1,6 @@
 # Greedy Emulators for Nuclear Two-Body Scattering
 
-This is a repository for Joshua Maldonado's code. <br> This is based on the code used in his thesis, with adjustments from the paper with Dr. Christian Drischler, Dr. Dick Furnstahl, and Dr. Petár Mlinaríc.
-
-This code accompanies the paper _Greedy Emulators for Nuclear Two-Body Scattering_.
+This is a repository for Joshua Maldonado's code. <br> This is based on the code used in his thesis, with adjustments from the paper with _Greedy Emulators for Nuclear Two-Body Scattering_ by Joshua Maldonado, Dr. Christian Drischler, Dr. Dick Furnstahl, and Dr. Petár Mlinaríc.
 
 ## Code Breakdown
 
@@ -66,7 +64,7 @@ Creating the virtual environment,
 python3 -m venv ./venv
 ```
 
-using it,
+activating it,
 
 ```shell
 source ./venv/bin/activate
@@ -84,7 +82,7 @@ To test the installation and compilation of the repository, including the compil
 python3 unit_test.py
 ```
 
-This will test the computation of the potential, full order model, and matching process.
+This will test the computation of the potential, full order model, and matching process and ensure that the expected results are obtained.
 
 
 ## Compiling the GT+ Chiral Potential
