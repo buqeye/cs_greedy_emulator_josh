@@ -102,6 +102,8 @@ make CXX=g++-14
 
 ***NOTE: The compilation will _likely_ require that `ext_modules` be changed in `/chiral_construction/setup.py` or `chiral_construction/Makefile`***.
 
+Further details regarding the compilation of this potential can be found at https://github.com/cdrischler/general_kvp.
+
 <!--
 For compiling things that give the error: `m2 (mach-o file, but is an incompatible architecture (have 'x86_64', need 'arm64'))` (at least for the purposes of looking at the [BUQEYE eigenvector continuation repo](https://github.com/buqeye/eigenvector-continuation) use these commands: \* `export LDFLAGS="-framework Accelerate"` \* `export NPY_DISTUTILS_APPEND_FLAGS=1` And then compile as mentioned in the BUQEYE repository but without the `-lliblapack` linker flag. This works only on MacOS computers.
 -->
