@@ -10,7 +10,7 @@ from modules.Constants import *
 
 ###   ###   ###   spherical bessels   ###   ###   ###
 def F(r, 
-      k, 
+      p, 
       l: int):
     r"""Riccati Bessel F function.
     
@@ -18,7 +18,7 @@ def F(r,
     ----------
     r : number or array-like
         Either the value or the coordinate-space mesh for the function.
-    k : number
+    p : number
         The value for the center-of-mass momentum, p = k = sqrt(2 mu E).
     l : int
         The relative orbital angular momentum quantum number.
@@ -28,14 +28,14 @@ def F(r,
     riccati_bessel_F : number or array-like
         The Riccati Bessel F function.
     """
-    rho = r * k
+    rho = r * p
     riccati_bessel_F = rho * spherical_jn(l, rho)
     
     return riccati_bessel_F
 
 
 def G(r, 
-      k, 
+      p, 
       l: int):
     r"""Riccati Bessel G function.
     
@@ -43,7 +43,7 @@ def G(r,
     ----------
     r : number or array-like
         Either the value or the coordinate-space mesh for the function.
-    k : number
+    p : number
         The value for the center-of-mass momentum, p = k = sqrt(2 mu E).
     l : int
         The relative orbital angular momentum quantum number.
@@ -53,14 +53,14 @@ def G(r,
     riccati_bessel_G : number or array-like
         The Riccati Bessel G function.
     """
-    rho = r * k
+    rho = r * p
     riccati_bessel_G = -rho * spherical_yn(l, rho)
     
     return riccati_bessel_G
 
 
 def F_prime(r, 
-            k, 
+            p, 
             l: int):
     r"""Analytic derivative of Riccati Bessel F function.
     
@@ -68,7 +68,7 @@ def F_prime(r,
     ----------
     r : number or array-like
         Either the value or the coordinate-space mesh for the function.
-    k : number
+    p : number
         The value for the center-of-mass momentum, p = k = sqrt(2 mu E).
     l : int
         The relative orbital angular momentum quantum number.
@@ -78,14 +78,14 @@ def F_prime(r,
     riccati_bessel_F_prime : number or array-like
         The Riccati Bessel F function.
     """
-    rho = r * k
-    riccati_bessel_F_prime = (spherical_jn(l, rho, derivative=False) + rho * spherical_jn(l, rho, derivative=True)) * k
+    rho = r * p
+    riccati_bessel_F_prime = (spherical_jn(l, rho, derivative=False) + rho * spherical_jn(l, rho, derivative=True)) * p
     
     return riccati_bessel_F_prime
 
 
 def G_prime(r, 
-            k, 
+            p, 
             l: int):
     r"""Analytic derivative of Riccati Bessel G function.
     
@@ -93,7 +93,7 @@ def G_prime(r,
     ----------
     r : number or array-like
         Either the value or the coordinate-space mesh for the function.
-    k : number
+    p : number
         The value for the center-of-mass momentum, p = k = sqrt(2 mu E).
     l : int
         The relative orbital angular momentum quantum number.
@@ -103,14 +103,14 @@ def G_prime(r,
     riccati_bessel_G_prime : number or array-like
         The Riccati Bessel G function.
     """
-    rho = r * k
-    riccati_bessel_G_prime = (-spherical_yn(l, rho, derivative=False) - rho * spherical_yn(l, rho, derivative=True)) * k
+    rho = r * p
+    riccati_bessel_G_prime = (-spherical_yn(l, rho, derivative=False) - rho * spherical_yn(l, rho, derivative=True)) * p
     
     return riccati_bessel_G_prime
 
 
 def H(r, 
-      k, 
+      p, 
       l: int, 
       plus: bool = True, 
       derivative: bool = False):
@@ -123,7 +123,7 @@ def H(r,
     ----------
     r : number or array-like
         Either the value or the coordinate-space mesh for the function.
-    k : number
+    p : number
         The value for the center-of-mass momentum, p = k = sqrt(2 mu E).
     l : int
         The relative orbital angular momentum quantum number.
@@ -145,10 +145,10 @@ def H(r,
     plusQ = (+1 if plus else -1)
     
     if not derivative:
-        coulomb_hankle_function_H = G(r, k, l) + plusQ * 1j * F(r, k, l)
+        coulomb_hankle_function_H = G(r, p, l) + plusQ * 1j * F(r, p, l)
         return coulomb_hankle_function_H
     else:
-        coulomb_hankle_function_H_prime = G_prime(r, k, l) + plusQ * 1j * F_prime(r, k, l)
+        coulomb_hankle_function_H_prime = G_prime(r, p, l) + plusQ * 1j * F_prime(r, p, l)
         return coulomb_hankle_function_H_prime
 
 
@@ -181,8 +181,8 @@ def analytic_phi(r,
         psi, when there is no potential. This is in units of fm^(-1).
     """
     p2 = (2 * mass * energy) / hbarc ** 2  # fm ^(-2)
-    k = p2 ** 0.5  # p = hbar k but hbar here is 1
+    p = p2 ** 0.5  # p = hbar k but hbar here is 1
     
-    phi = F(r, k, l) / k
+    phi = F(r, p, l) / p
     
     return phi

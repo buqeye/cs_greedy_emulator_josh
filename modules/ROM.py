@@ -959,7 +959,7 @@ class Emulator:
         """
         if matching_indices is None:
             matching_indices = self.matching_indices
-        if self.exact_elements is not None:
+        if (self.exact_elements is not None) and (self.verbose):
             print("Exact elements already calculated.")
         else:
             self.exact_elements = {"delta_l": np.empty(self.param_pts),
