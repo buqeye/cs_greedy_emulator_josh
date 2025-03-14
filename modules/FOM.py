@@ -49,7 +49,7 @@ class MatrixNumerovSolver:
             automatically be corrected to `ypr_0=1`, based on the given Potential's mesh.
         """
         ###   ###   ###   variable definitions   ###   ###   ###
-         # definitions taken from the potential
+        # definitions taken from the potential
         self.potential = potential  # from Potential.py (or another file that uses the same structure)
         self.number_of_parameters = self.potential.number_of_parameters + 1  # because this inserts in `1.` before theta
         self.l = self.potential.l  # relative orbital angular momentum quantum number
@@ -82,7 +82,7 @@ class MatrixNumerovSolver:
             self.ypr_0 = self.dr
         
         self.G = G(self.r, self.p, self.l)
-        self.F = F(self.r, self.p, self.l)  # using this in place of phi would be more consistent with the paper. It would also involve throwing factors of p (k) around.
+        self.F = F(self.r, self.p, self.l)  # using this in place of phi would be more consistent with the paper. It would also involve throwing factors of p around.
         self.phi = analytic_phi(self.r, energy=self.energy, l=self.l)
         
         if self.use_ab:
@@ -558,4 +558,3 @@ class MatrixNumerovSolver:
             y[2:] = solve_banded((2, 0), A_band, b_band)
         
         return y
-#

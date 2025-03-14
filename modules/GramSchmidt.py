@@ -2,6 +2,7 @@
 # GitHub: https://github.com/Ub3rJosh
 # Email: jm998521@ohio.edu (joshuamaldonado4432@gmail.com)
 
+###   ###   ###   imports   ###   ###   ###
 import numpy as np
 from numba import njit
 
@@ -9,7 +10,7 @@ from numba import njit
 @njit(fastmath=True)
 def MGS(A_matrix, new_vector, atol=1e-8, rtol=1e-8):
     r"""Modified Gram-Schmidt function that orthonormalizes the one vector to the basis.
-       NOTE: This function assumes that `A_matrix` is already orthonormalized!
+    NOTE: This function assumes that `A_matrix` is already orthonormalized!
     
     Modified Gram Schmidt:
     Takes in a basis with vectors in the columns as `A_matrix`, and a proposed new vector to be added 

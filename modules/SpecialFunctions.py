@@ -3,7 +3,6 @@
 # Email: jm998521@ohio.edu (joshuamaldonado4432@gmail.com)
 
 ###   ###   ###   imports   ###   ###   ###
-# import numpy as np
 from scipy.special import spherical_jn, spherical_yn
 from modules.Constants import *
 

@@ -267,7 +267,7 @@ class Potential:
             file_to_open = f"localGT+_lecs_order_{self.order}_R0_{self.cutoff}_lam_{self.SFR_cutoff}.yaml"
             with open(f"{path_to_potential_data}/chiral/{file_to_open}", "r") as file:
                 temp_import_parameters = yaml.safe_load(file)
-                # filter out non-parameter values from yalm file
+                # filter out non-parameter values from yaml file
                 del temp_import_parameters["potId"]
                 del temp_import_parameters["order"]
                 del temp_import_parameters["R0"]

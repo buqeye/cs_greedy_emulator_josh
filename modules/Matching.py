@@ -16,7 +16,7 @@ def propagate_delta_error(a_tilde,
                           M, 
                           M_pinv=None):
     r"""Propagates the errors from the wavefunction get a maximum propagated error to the phaseshift.
-       NOTE: This computes equation 52 in the paper.
+    NOTE: This computes equation 52 in the paper.
     
     Parameters
     ----------
@@ -52,7 +52,7 @@ def true_delta_error(a,
                      M, 
                      M_pinv=None):
     r"""Propagates the errors from the wavefunction get a maximum propagated error to the phaseshift.
-       NOTE: This computes equation 52 in the paper.
+    NOTE: This computes equation 52 in the paper.
     
     Parameters
     ----------
@@ -89,7 +89,7 @@ def propagate_ab_error(wavefunction_error,
                        M, 
                        M_pinv=None):
     r"""Propagates the errors from the wavefunction get a maximum propagated error to $a$ and $b$.
-       NOTE: This computes equation 53 in the paper.
+    NOTE: This computes equation 53 in the paper.
     
     Parameters
     ----------
