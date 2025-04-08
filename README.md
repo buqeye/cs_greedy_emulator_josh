@@ -108,6 +108,15 @@ Further details regarding the compilation of this potential can be found at http
 For compiling things that give the error: `m2 (mach-o file, but is an incompatible architecture (have 'x86_64', need 'arm64'))` (at least for the purposes of looking at the [BUQEYE eigenvector continuation repo](https://github.com/buqeye/eigenvector-continuation) use these commands: \* `export LDFLAGS="-framework Accelerate"` \* `export NPY_DISTUTILS_APPEND_FLAGS=1` And then compile as mentioned in the BUQEYE repository but without the `-lliblapack` linker flag. This works only on MacOS computers.
 -->
 
+## Details on the Kohn Anomaly Figure
+The end of the results section has a figure (Fig. 11) that shows the detection and elimination of an anomaly by the G-ROM, and simultaneously shows that the LSPG-ROM does not see such an anomaly. 
+This figure was created using the $^1S_0$ GT+ Chiral Potential with cutoffs of $r=1\rm{fm}, \Lambda=1000\rm{MeV}$. 
+A one-dimensional parameter space is used for the making of this figure, varying $C_S$ between $150%$ of its best fit value of 5.4385 fm$^2$. 
+For each emulator, two snapshots were added on the boundary of this parameter space. 
+The emulators then added one snapshot to their basis using the greedy algorithm laid out in this work. 
+The creation of this figure (with notes and annotations) are included in `kohn_anomaly_visualization.ipynb`.
+
+
 ## Citing this work
 ```bibtex
 
