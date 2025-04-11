@@ -119,5 +119,13 @@ The creation of this figure (with notes and annotations) are included in `kohn_a
 
 ## Citing this work
 ```bibtex
-
+@article{Maldonado:2025ftg,
+    author = "Maldonado, J. M. and Drischler, C. and Furnstahl, R. J. and Mlinari\'c, P.",
+    title = "{Greedy Emulators for Nuclear Two-Body Scattering}",
+    eprint = "2504.06092",
+    archivePrefix = "arXiv",
+    primaryClass = "nucl-th",
+    month = "4",
+    year = "2025"
+}
 ```
