@@ -60,7 +60,7 @@ def apply_range_factor(lecs: dict,
         if parameter in kept_lecs:
             vary_value = range_factor * default_values[i]
             parameter_bounds[parameter] = [default_values[i] - vary_value,
-                                       default_values[i] + vary_value]
+                                           default_values[i] + vary_value]
     
     if potential is not None:
         # grab the LECs that contrubute
@@ -262,8 +262,8 @@ class Emulator:
         self.n_adj = self.solver.n_adjustment  # redefine (and shorten) for convenience
         self.snapshots = np.zeros((self.n + self.n_adj, self.snapshot_max))
         self.dagger_snapshots = self.snapshots.T.conjugate()  # for convenience
-        self.truncated_snapshots = self.snapshots[2:, :]  # for convenience
-        self.truncated_dagger_snapshots = self.dagger_snapshots[:, 2:]  # for convenience
+        self.truncated_snapshots = self.snapshots[self.solver.n_start:, :]  # for convenience
+        self.truncated_dagger_snapshots = self.dagger_snapshots[:, self.solver.n_start:]  # for convenience
         
         default_theta = self.potential.default_theta.copy()
         if self.snapshot_parameters is not None:
@@ -317,10 +317,12 @@ class Emulator:
         self.lower_error_bounds = None
         
         # projections for error estimator (NOTE: the solver calculates things from i=0, so we trim i=0,1 since those are from initial conditions)
-        self.b_const = self.solver.const_b[2:, :].T  # a i
+        self.b_const = self.solver.const_b[self.solver.n_start:, :].T  # a i
         self.b_const_dagger = self.b_const.conjugate()  # a i  (we "transpose" along the mesh, which is just the mesh here)
         
-        self.A_const = np.transpose(self.solver.const_A_matrix[2:, 2:], (2, 0, 1))  # a i j
+        self.A_const = np.transpose(self.solver.const_A_matrix[self.solver.n_start:, 
+                                                               self.solver.n_start:], 
+                                                               (2, 0, 1))  # a i j
         self.A_const_dagger = np.transpose(self.A_const, (0, 2, 1)).conjugate()  # a j i
         
         # since these don't need to be super fast, they are just left as einsum calls
@@ -505,7 +507,7 @@ class Emulator:
         None
         """
         # just to make sure:
-        self.truncated_snapshots = self.snapshots[2:, :]
+        self.truncated_snapshots = self.snapshots[self.solver.n_start:, :]
         self.dagger_snapshots = self.snapshots.T.conjugate()
         self.truncated_dagger_snapshots = self.truncated_snapshots.T.conjugate()
         
@@ -552,7 +554,7 @@ class Emulator:
                                                     self.b_const,
                                                     self.truncated_snapshots[:, :n_basis],
                                                     optimize="greedy")
-            self.Y_nonorth = np.zeros((self.n + self.n_adj - 2, self.number_of_parameters * (n_basis + 1)))
+            self.Y_nonorth = np.zeros((self.n + self.n_adj - self.solver.n_start, self.number_of_parameters * (n_basis + 1)))
             for a in np.arange(self.number_of_parameters):
                 self.Y_nonorth[:, (a * n_basis):((a + 1) * n_basis)] = self.offline_projection_A_X[a, :n_basis, :].T
             self.Y_nonorth[:, (self.number_of_parameters * n_basis):] = np.copy(self.b_const).T
@@ -1528,7 +1530,7 @@ class Emulator:
                 self.snapshot_max = snapshot_num # override the snapshot_max
             # take only successful runs in arrays
             self.snapshots = self.snapshots[:, :self.snapshot_max]
-            self.truncated_snapshots = self.snapshots[2:, :]
+            self.truncated_snapshots = self.snapshots[self.solver.n_start:, :]
             self.dagger_snapshots = self.snapshots.T.conjugate()
             self.truncated_dagger_snapshots = self.truncated_snapshots.T.conjugate()
             
@@ -1638,10 +1640,16 @@ class Emulator:
                 else:
                     raise ValueError("Unknown error estimation method. Must be \"G-ROM\" or \"LSPG-ROM\".")
                 # use the information we know in the emulated wave
-                emulated_chi = np.append(np.array([self.solver.y_0, self.solver.ypr_0]), emulated_chi)
+                if self.solver.n_start == 2:
+                    emulated_chi = np.append(np.array([self.solver.y_0, self.solver.ypr_0]), emulated_chi)
+                elif self.solver.n_start == 1:
+                    emulated_chi = np.append(np.array([self.solver.y_0]), emulated_chi)
                 return emulated_chi, estimated_error
             
-            emulated_chi = np.append(np.array([self.solver.y_0, self.solver.ypr_0]), emulated_chi)
+            if self.solver.n_start == 2:
+                emulated_chi = np.append(np.array([self.solver.y_0, self.solver.ypr_0]), emulated_chi)
+            elif self.solver.n_start == 1:
+                emulated_chi = np.append(np.array([self.solver.y_0]), emulated_chi)
             return emulated_chi
         elif emulation_method == "LSPG-ROM":
             coefficients, lhs, rhs, residual = self.calculate_coefficients_LSPG(theta,
@@ -1663,11 +1671,17 @@ class Emulator:
                 elif error_estimation_method == "G-ROM":
                     estimated_error = self.estimate_error_GROM(coefficients, theta)
                 # use the information we know in the emulated wave
-                emulated_chi = np.append(np.array([self.solver.y_0, self.solver.ypr_0]), emulated_chi)
+                if self.solver.n_start == 2:
+                    emulated_chi = np.append(np.array([self.solver.y_0, self.solver.ypr_0]), emulated_chi)
+                elif self.solver.n_start == 1:
+                    emulated_chi = np.append(np.array([self.solver.y_0]), emulated_chi)
                 return emulated_chi, estimated_error
             
             # use the information we know in the emulated wave
-            emulated_chi = np.append(np.array([self.solver.y_0, self.solver.ypr_0]), emulated_chi)
+            if self.solver.n_start == 2:
+                emulated_chi = np.append(np.array([self.solver.y_0, self.solver.ypr_0]), emulated_chi)
+            elif self.solver.n_start == 1:
+                emulated_chi = np.append(np.array([self.solver.y_0]), emulated_chi)
             return emulated_chi
         else:
             raise ValueError(f"Emulation_method {emulation_method} not known.")
