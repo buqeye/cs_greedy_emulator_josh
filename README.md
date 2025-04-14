@@ -17,8 +17,8 @@ The emulators implemented in `ROM.py` are the Galerkin reduced order model (G-RO
 |     CPU type     | FOM <br>(matrix Numerov) | G-ROM <br>| G-ROM w/ <br> error est. | LSPG-ROM <br>| LSPG-ROM w/ <br> error est. |
 |:----------------:|:------------------------:|:---------:|:------------------------:|:------------:|:---------------------------:|
 |        ARM       |          1 (~90µs)       |    ~9x    |            ~6x           |     ~4.5x    |             ~4.5x           | <!-- M2 Max -->
-|        x86       |          1 (~215µs)      |    ~7x    |            ~4x           |      ~3x     |              ~3x            | <!-- Intel i5 4690K (overclocked)-->
-| github codespace |          1 (~150µs)      |    ~6x    |           ~4.5x          |     ~2.5x    |             ~2.5x           |
+|        x86       |          1 (~155µs)      |    ~7x    |            ~4x           |      ~3x     |              ~3x            | <!-- Intel i5 4690K (overclocked)-->
+| github codespace |          1 (~145µs)      |    ~6x    |           ~4.5x          |     ~2.5x    |             ~2.5x           |
 
 The reported "~__x" values are the approximate speedups _this_ implementation of the emulators and matrix Numerov FOM. The values noted in parenthesis under the FOM header are the approximate runtimes of the matrix Numerov method on each system. These speedups were taken by looking at 5-10 snapshots when using the Minnesota potential and the GT+ local chiral potential; each case was run for $7 \times 50,000$ solutions using `%timeit` in the Jupyter notebook `runtimes.ipynb`. You can run this notebook to see the runtimes and speedups on your system!
 
