@@ -6,7 +6,7 @@ This is a repository for Joshua Maldonado's code. <br> This is based on the code
 
 <img align="right" width="375" src="/markdown_figures/greedy-vs-POD.jpg">
 
-There are three main files (classes) in this repository, the nuclear potential (Minnesota and GT+ local chiral (as laid out in [Gezerlis et. al.](https://doi.org/10.1103/PhysRevC.90.054323)) `/modules/Potential.py`, the Matrix Numerov method full order model `/modules/FOM.py`, and the Galerkin Projection based reduced order models `modules/ROM.py`.
+There are three main files (classes) in this repository, the nuclear potentials Minnesota and GT+ local chiral (as laid out in [Gezerlis et. al.](https://doi.org/10.1103/PhysRevC.90.054323)) `/modules/Potential.py`, the Matrix Numerov method full order model `/modules/FOM.py`, and the Galerkin Projection based reduced order models `/modules/ROM.py`.
 
 This code is meant to be adaptable, _particularly_ `Potential.py`. Notably, there is a pre-built `DoItYourselfPotential` class that attempts to walk through how one would go about implementing their own _affine_ nuclear potential to be used with the solver and emulators.
 
