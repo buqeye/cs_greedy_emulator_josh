@@ -321,33 +321,20 @@ def match_using_inverse_log(r_mesh,
     
     
     ###   ###   ###   apply K (or T) matrix element   ###   ###   ###
+    # calculate scale factor
+    if use_T_matrix:
+        u_an = (F(r, p, l)[match_index] + (T_l * H(r, p, l, plus=True)[match_index])) / p
+    else:
+        u_an = (F(r, p, l)[match_index] + K_l * G(r, p, l)[match_index]) / p
+    scale = u_an / psi[match_index]
+    
+    # scale the wave function
     if scattered_wave:
-        if use_T_matrix:
-             # this is a complex equation due to the Hankle
-            u_an = (F(r, p, l)[match_index] + np.real(T_l * H(r, p, l, plus=True)[match_index]))
-            scale = u_an / psi[match_index]
-            
-            u_scaled = scale * psi - phi
-            u_pr_scaled = scale * psi_pr - phi_pr
-        else:
-            u_an = (F(r, p, l)[match_index] + K_l * G(r, p, l)[match_index]) / p
-            scale = u_an / psi[match_index]
-            
-            u_scaled = scale * psi - phi
-            u_pr_scaled = scale * psi_pr - phi_pr
-    else:  # for the full wave function
-        if use_T_matrix:
-            u_an = (F(r, p, l)[match_index] + (T_l * H(r, p, l, plus=True)[match_index]))
-            scale = u_an / psi[match_index]
-            
-            u_scaled = psi * scale
-            u_pr_scaled = psi_pr * scale
-        else:
-            u_an = (F(r, p, l)[match_index] + K_l * G(r, p, l)[match_index]) / p
-            scale = u_an / psi[match_index]
-            
-            u_scaled = psi * scale
-            u_pr_scaled = psi_pr * scale
+        u_scaled = scale * psi - phi
+        u_pr_scaled = scale * psi_pr - phi_pr
+    else:
+        u_scaled = psi * scale
+        u_pr_scaled = psi_pr * scale
     
     return_dict = {"r": r,
                    "scaled_wave_function": u_scaled,

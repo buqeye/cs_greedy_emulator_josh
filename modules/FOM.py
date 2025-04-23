@@ -94,7 +94,9 @@ class MatrixNumerovSolver:
         # potential pieces
         self.parameter_independent_array = np.copy(potential.parameter_independent_array)  # this is a copy just to be safe, but it should never be mutated
         
-        self.l_prestore_over_rsq = self.l * (self.l + 1) / (self.r ** 2)
+        self.l_prestore_over_rsq = np.empty(self.n)
+        self.l_prestore_over_rsq[1:] = self.l * (self.l + 1) / (self.r[1:] ** 2)
+        # this is discussed near equation 13
         if self.r[0] <= self.epsilon:
             if self.l == 1:
                 self.l_prestore_over_rsq[0] = 1 / 6
@@ -587,7 +589,6 @@ class AllAtOnceNumerovSolver:
         y_0 : number (optional)
             The initial value of the y (chi or psi). For regular solutions, this should always be `0.`
         """
-        print("The all-at-once numerov solver code is still being debugged.")
         
         ###   ###   ###   variable definitions   ###   ###   ###
         # definitions taken from the potential
@@ -623,7 +624,9 @@ class AllAtOnceNumerovSolver:
         # potential pieces
         self.parameter_independent_array = np.copy(potential.parameter_independent_array)  # this is a copy just to be safe, but it should never be mutated
         
-        self.l_prestore_over_rsq = self.l * (self.l + 1) / (self.r ** 2)
+        self.l_prestore_over_rsq = np.empty(self.n)
+        self.l_prestore_over_rsq[1:] = self.l * (self.l + 1) / (self.r[1:] ** 2)
+        # this is discussed near equation 13
         if self.r[0] <= self.epsilon:
             if self.l == 1:
                 self.l_prestore_over_rsq[0] = 1 / 6
@@ -721,7 +724,7 @@ class AllAtOnceNumerovSolver:
         
         for q in np.arange(1, self.number_of_parameters):
             minus_g[:, q] = (2 * self.mass / hbarc ** 2) * self.potential.parameter_independent_array[:, q - 1]
-        minus_g[:, 0] = self.g_naught
+        minus_g[:, 0] = self.g_naught# * self.potential.parameter_independent_array[:, 0]
         
         g = -minus_g
         return g
@@ -788,7 +791,7 @@ class AllAtOnceNumerovSolver:
             The parameter-independent calculation for the right-hand side of the ODE.
         """
         # define everything except for the initial conditions
-        b = np.zeros((self.n + self.n_adjustment, self.number_of_parameters))
+        b = np.zeros((self.n + self.n_adjustment, self.number_of_parameters), dtype=complex)
         b[:self.n_slice, :] = self.coeffs_one_ten_one @ self.const_s
         
         # use initial conditions
@@ -1040,7 +1043,7 @@ class AllAtOnceNumerovSolver:
         elif ret_bar:
             return A_band, b_band
         
-        y = np.empty(self.n + self.n_adjustment, dtype=complex)
+        y = np.zeros(self.n + self.n_adjustment, dtype=complex)
         y[0] = self.y_0
         y[self.n_start:] = solve_banded((1, 1), A_band, b_band)
         
