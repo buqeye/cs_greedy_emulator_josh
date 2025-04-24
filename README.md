@@ -10,7 +10,7 @@ There are three main files (classes) in this repository, the nuclear potentials 
 
 This code is meant to be adaptable, _particularly_ `Potential.py`. Notably, there is a pre-built `DoItYourselfPotential` class that attempts to walk through how one would go about implementing their own _affine_ nuclear potential to be used with the solver and emulators.
 
-The solver laid out in `FOM.py` are strictly for the matrix Numerov method (with or without $a$ and $b$). Other solvers can be implemented to be used with the emulators, such as the ones laid out in the appendix, so long as the naming scheme of the newly implemented solver is consistent for the offline projections.
+The solver laid out in `FOM.py` are strictly for the matrix Numerov method (with or without $a$ and $b$, as well as the all-at-once method). Other solvers can be implemented to be used with the emulators, such as the ones laid out in the appendix, so long as the naming scheme of the newly implemented solver is consistent for the offline projections.
 
 The emulators implemented in `ROM.py` are the Galerkin reduced order model (G-ROM) and the least-squares Petrov-Galerkin reduced order model (LSPG-ROM). Both emulators have error estimators. In general, from my testing, without error estimation the G-ROM is faster than the LSPG-ROM, and with error estimation the LSPG-ROM is faster than the G-ROM. Although emulator speedups and runtimes vary with implementation and machines, this code has speedups (as run on _my_ machines) as follows:
 
