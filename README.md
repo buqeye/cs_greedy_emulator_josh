@@ -87,7 +87,7 @@ This will test the computation of the potential, full order model, and matching 
 
 ## Compiling the GT+ Chiral Potential
 
-To compile the local chiral interactions GT+, first make sure you're in the [correct directory](https://github.com/Ub3rJosh/greedy-emulator/tree/main/chiral_construction),
+To compile the local chiral interactions GT+, first make sure you're in the [correct directory](https://github.com/buqeye/cs_greedy_emulator_josh/tree/main/chiral_construction),
 
 ``` shell
 cd <your-path>/greedy-emulator/chiral_construction/
