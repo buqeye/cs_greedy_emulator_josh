@@ -2,6 +2,8 @@
 
 This is a repository for Joshua Maldonado's code. <br> This is based on the code used in [his thesis](https://etd.ohiolink.edu/acprod/odb_etd/r/etd/search/10?p10_accession_num=ohiou1726590160450187&clear=10&session=103007851808756), with adjustments from the paper with [_Greedy Emulators for Nuclear Two-Body Scattering_](https://arxiv.org/abs/2504.06092) by Joshua Maldonado, Dr. Christian Drischler, Dr. Dick Furnstahl, and Dr. Petár Mlinaríc.
 
+An additional, seperate implementation of the greedy emulators can be found [here](https://github.com/buqeye/cs_greedy_emulator), which creates figures 2, 5, 6, and comparison figures. Figure 11 and plots for figure 1 are made here, in addition to alternate versions of figures 2, 5, and 6.
+
 ## Code Breakdown
 
 <img align="right" width="375" src="/markdown_figures/greedy-vs-POD.jpg">
@@ -90,7 +92,7 @@ This will test the computation of the potential, full order model, and matching 
 To compile the local chiral interactions GT+, first make sure you're in the [correct directory](https://github.com/buqeye/cs_greedy_emulator_josh/tree/main/chiral_construction),
 
 ``` shell
-cd <your-path>/greedy-emulator/chiral_construction/
+cd <your-path>/cs_greedy_emulator_josh/chiral_construction/
 ```
 
 and using the GNU compiler (in this case, version 14),
@@ -102,7 +104,7 @@ make CXX=g++-14
 
 ***NOTE: The compilation will _likely_ require that `ext_modules` be changed in `/chiral_construction/setup.py` or `chiral_construction/Makefile`***.
 
-Further details regarding the compilation of this potential can be found at https://github.com/cdrischler/general_kvp.
+<!-- Further details regarding the compilation of this potential can be found at https://github.com/cdrischler/general_kvp. -->
 
 <!--
 For compiling things that give the error: `m2 (mach-o file, but is an incompatible architecture (have 'x86_64', need 'arm64'))` (at least for the purposes of looking at the [BUQEYE eigenvector continuation repo](https://github.com/buqeye/eigenvector-continuation) use these commands: \* `export LDFLAGS="-framework Accelerate"` \* `export NPY_DISTUTILS_APPEND_FLAGS=1` And then compile as mentioned in the BUQEYE repository but without the `-lliblapack` linker flag. This works only on MacOS computers.
