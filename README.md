@@ -1,6 +1,6 @@
 # Greedy Emulators for Nuclear Two-Body Scattering
 
-This is a repository for Joshua Maldonado's code. <br> This is based on the code used in [his thesis](https://etd.ohiolink.edu/acprod/odb_etd/r/etd/search/10?p10_accession_num=ohiou1726590160450187&clear=10&session=103007851808756), with adjustments from the paper with [_Greedy Emulators for Nuclear Two-Body Scattering_](https://arxiv.org/abs/2504.06092) by Joshua Maldonado, Dr. Christian Drischler, Dr. Dick Furnstahl, and Dr. Petár Mlinaríc.
+This is a repository for Joshua Maldonado's code. <br> This is based on the code used in [his thesis](https://etd.ohiolink.edu/acprod/odb_etd/r/etd/search/10?p10_accession_num=ohiou1726590160450187&clear=10&session=103007851808756), with adjustments from the paper with [_Greedy Emulators for Nuclear Two-Body Scattering_](https://journals.aps.org/prc/abstract/10.1103/k77q-f82l) by Joshua Maldonado, Dr. Christian Drischler, Dr. Dick Furnstahl, and Dr. Petár Mlinaríc.
 
 An additional, seperate implementation of the greedy emulators can be found [here](https://github.com/buqeye/cs_greedy_emulator), which creates figures 2, 5, 6, and comparison figures. Figure 11 and plots for figure 1 are made here, in addition to alternate versions of figures 2, 5, and 6.
 
