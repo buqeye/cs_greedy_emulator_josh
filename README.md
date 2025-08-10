@@ -122,17 +122,19 @@ The creation of this figure (with notes and annotations) are included in `kohn_a
 ## Citing this work
 ```bibtex
 @article{k77q-f82l,
-    title = {``Greedy'' emulators for nuclear two-body scattering},
-    author = {Maldonado, J. M., Drischler, C., Furnstahl, R. J., and Mlinarić, P.},
-    journal = {Phys. Rev. C},
-    pages = {--},
-    year = {2025},
-    month = {Jun},
-    publisher = {American Physical Society},
-    doi = {10.1103/k77q-f82l},
-    url = {https://link.aps.org/doi/10.1103/k77q-f82l}
+  title = {Greedy emulators for nuclear two-body scattering},
+  author = {Maldonado, J. M. and Drischler, C. and Furnstahl, R. J. and Mlinari\ifmmode \acute{c}\else \'{c}\fi{}, P.},
+  journal = {Phys. Rev. C},
+  volume = {112},
+  issue = {2},
+  pages = {024002},
+  numpages = {22},
+  year = {2025},
+  month = {Aug},
+  publisher = {American Physical Society},
+  doi = {10.1103/k77q-f82l},
+  url = {https://link.aps.org/doi/10.1103/k77q-f82l}
 }
-
 ```
 <!--
 ```bibtex
